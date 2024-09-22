@@ -28,22 +28,27 @@
             margin-bottom: 2rem;
         }
         .search-container {
-            position: relative;
+            display: flex;
             margin-bottom: 1.5rem;
         }
         .search-input {
-            width: 100%;
-            padding: 0.75rem 2.5rem 0.75rem 1rem;
-            border-radius: 9999px;
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 9999px 0 0 9999px;
             border: none;
             outline: none;
         }
-        .search-icon {
-            position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
+        .search-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4c1d95;
+            color: white;
+            border: none;
+            border-radius: 0 9999px 9999px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-button:hover {
+            background-color: #6d28d9;
         }
         .results-grid {
             display: grid;
@@ -87,12 +92,7 @@
                 placeholder="搜索姓名..."
                 class="search-input"
             />
-            <div class="search-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </div>
+            <button id="search-button" class="search-button">搜索</button>
         </div>
         <div id="results-grid" class="results-grid">
             <!-- 结果将在这里动态插入 -->
@@ -123,6 +123,7 @@
         ];
 
         const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
         const resultsGrid = document.getElementById('results-grid');
         const noResults = document.getElementById('no-results');
 
@@ -144,8 +145,8 @@
             }
         }
 
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.trim().toLowerCase();
+        function performSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
             if (searchTerm === '') {
                 displayResults([]);  // 清空结果
                 return;
@@ -154,6 +155,14 @@
                 result => result.name.toLowerCase().includes(searchTerm)
             );
             displayResults(filteredResults);
+        }
+
+        searchButton.addEventListener('click', performSearch);
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
         });
 
         // 初始状态不显示结果
