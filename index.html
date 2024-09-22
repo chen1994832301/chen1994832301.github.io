@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>面试通过名单</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
         body { 
@@ -79,8 +76,31 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="text/babel">
+    <div class="container">
+        <h1 class="title">
+            🎉 面试通过名单 🎉
+        </h1>
+        <div class="search-container">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="搜索姓名..."
+                class="search-input"
+            />
+            <div class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+        </div>
+        <div id="results-grid" class="results-grid">
+            <!-- 结果将在这里动态插入 -->
+        </div>
+        <p id="no-results" class="no-results" style="display: none;">没有找到匹配的结果</p>
+    </div>
+
+    <script>
         const results = [
             { name: '张燕标', class: '24云计算1' },
             { name: '赖瑗瑗', class: '24数媒2' },
@@ -102,55 +122,42 @@
             { name: '许紫茵', class: '24数媒2' },
         ];
 
-        const SearchIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        );
+        const searchInput = document.getElementById('search-input');
+        const resultsGrid = document.getElementById('results-grid');
+        const noResults = document.getElementById('no-results');
 
-        const InterviewResultsAnnouncement = () => {
-            const [searchTerm, setSearchTerm] = React.useState('');
+        function displayResults(filteredResults) {
+            resultsGrid.innerHTML = '';
+            if (filteredResults.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filteredResults.forEach(result => {
+                    const card = document.createElement('div');
+                    card.className = 'result-card';
+                    card.innerHTML = `
+                        <h2 class="result-name">${result.name}</h2>
+                        <p class="result-class">${result.class}</p>
+                    `;
+                    resultsGrid.appendChild(card);
+                });
+            }
+        }
 
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.trim().toLowerCase();
+            if (searchTerm === '') {
+                displayResults([]);  // 清空结果
+                return;
+            }
             const filteredResults = results.filter(
-                (result) =>
-                    result.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    result.class.toLowerCase().includes(searchTerm.toLowerCase())
+                result => result.name.toLowerCase().includes(searchTerm)
             );
+            displayResults(filteredResults);
+        });
 
-            return (
-                <div className="container">
-                    <h1 className="title">
-                        🎉 面试通过名单 🎉
-                    </h1>
-                    <div className="search-container">
-                        <input
-                            type="text"
-                            placeholder="搜索姓名或班级..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="search-input"
-                        />
-                        <div className="search-icon">
-                            <SearchIcon />
-                        </div>
-                    </div>
-                    <div className="results-grid">
-                        {filteredResults.map((result, index) => (
-                            <div key={index} className="result-card">
-                                <h2 className="result-name">{result.name}</h2>
-                                <p className="result-class">{result.class}</p>
-                            </div>
-                        ))}
-                    </div>
-                    {filteredResults.length === 0 && (
-                        <p className="no-results">没有找到匹配的结果</p>
-                    )}
-                </div>
-            );
-        };
-
-        ReactDOM.render(<InterviewResultsAnnouncement />, document.getElementById('root'));
+        // 初始状态不显示结果
+        displayResults([]);
     </script>
 </body>
 </html>
