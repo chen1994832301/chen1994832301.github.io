@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试通过名单</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+        body { 
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3e8ff;
+        }
+        .container {
+            max-width: 1024px;
+            margin: 20px auto;
+            padding: 20px;
+            background-image: linear-gradient(to right, #8b5cf6, #ec4899);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            outline: none;
+        }
+        .search-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .result-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .result-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .result-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #7c3aed;
+        }
+        .result-class {
+            color: #4b5563;
+        }
+        .no-results {
+            color: white;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const results = [
+            { name: '张燕标', class: '24云计算1' },
+            { name: '赖瑗瑗', class: '24数媒2' },
+            { name: '卢国慈', class: '24计应2' },
+            { name: '郭艳婷', class: '24云计算3' },
+            { name: '李冰莹', class: '24大数据技术1' },
+            { name: '沙依琳', class: '24人工智能1' },
+            { name: '李彩霞', class: '24人工智能1' },
+            { name: '黄丽娟', class: '24人工智能1' },
+            { name: '胡志雄', class: '24人工智能2' },
+            { name: '罗茵', class: '24数媒1' },
+            { name: '卢雯敏', class: '24数媒1' },
+            { name: '刘梦含', class: '24数媒1' },
+            { name: '邱梓桐', class: '24大数据2' },
+            { name: '齐小雨', class: '24数媒3' },
+            { name: '李慧瑶', class: '24人工智能1' },
+            { name: '孙淮杰', class: '24计应中美' },
+            { name: '郭晶晶', class: '24大数据1' },
+            { name: '许紫茵', class: '24数媒2' },
+        ];
+
+        const SearchIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        );
+
+        const InterviewResultsAnnouncement = () => {
+            const [searchTerm, setSearchTerm] = React.useState('');
+
+            const filteredResults = results.filter(
+                (result) =>
+                    result.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    result.class.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            return (
+                <div className="container">
+                    <h1 className="title">
+                        🎉 面试通过名单 🎉
+                    </h1>
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            placeholder="搜索姓名或班级..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                        <div className="search-icon">
+                            <SearchIcon />
+                        </div>
+                    </div>
+                    <div className="results-grid">
+                        {filteredResults.map((result, index) => (
+                            <div key={index} className="result-card">
+                                <h2 className="result-name">{result.name}</h2>
+                                <p className="result-class">{result.class}</p>
+                            </div>
+                        ))}
+                    </div>
+                    {filteredResults.length === 0 && (
+                        <p className="no-results">没有找到匹配的结果</p>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<InterviewResultsAnnouncement />, document.getElementById('root'));
+    </script>
+</body>
+</html>
